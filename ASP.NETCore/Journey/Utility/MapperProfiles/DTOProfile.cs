@@ -8,13 +8,20 @@ namespace Journey.Utility.MapperProfiles
     {
         public DTOProfile()
         {
-
+            MapDTO();
+            MapModels();
         }
 
         private void MapDTO()
         {
             CreateMap<City, CityDTO>().ReverseMap();
             CreateMap<PlaceOfInterest, PlaceOfInterestDTO>().ReverseMap();
+        }
+
+        private void MapModels()
+        {
+            CreateMap<CreateCityModel, City>();
+            CreateMap<UpdateCityModel, City>();
         }
     }
 }
