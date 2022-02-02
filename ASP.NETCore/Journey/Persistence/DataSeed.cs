@@ -31,6 +31,8 @@ namespace Journey.Persistence
                     }}
                 );
             }
+
+            _context.SaveChanges();
         }
     }
 }
