@@ -30,7 +30,7 @@ namespace Journey
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<JourneyDbContext>(opts => opts.UseSqlServer(Configuration.GetConnectionString("MSSQL_v1")));
-            services.AddSingleton<JourneyUnit>();
+            services.AddScoped<JourneyUnit>();
             services.AddAutoMapper(typeof(Program));
             services.AddControllers();
             services.AddSwaggerGen(options =>
