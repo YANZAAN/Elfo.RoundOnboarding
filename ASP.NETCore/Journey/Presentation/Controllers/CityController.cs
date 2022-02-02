@@ -45,7 +45,7 @@ namespace Journey.Presentation.Controllers
         public ActionResult<CityDTO> GetCity(string id)
         {
             var guidId = Guid.Parse(id);
-            var city = _unit.Cities.GetById(id);
+            var city = _unit.Cities.GetById(guidId);
 
             if (city == default)
             {
@@ -63,7 +63,7 @@ namespace Journey.Presentation.Controllers
         public ActionResult<IEnumerable<PlaceOfInterestDTO>> GetCityPlaces(string id)
         {
             var guidId = Guid.Parse(id);
-            var city = _unit.Cities.GetById(id);
+            var city = _unit.Cities.GetById(guidId);
 
             if (city == default)
             {
@@ -83,9 +83,9 @@ namespace Journey.Presentation.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<City> CreateCity(CityDTO cityDTO)
+        public ActionResult<City> CreateCity(CreateCityModel cityModel)
         {
-            var city = _mapper.Map<City>(cityDTO);
+            var city = _mapper.Map<City>(cityModel);
 
             _unit.Cities.Insert(city);
 
@@ -99,25 +99,18 @@ namespace Journey.Presentation.Controllers
                 return BadRequest();
             }
 
-            return CreatedAtAction(
-                nameof(city),
-                new { id = city.Id.ToString() },
-                cityDTO);
+            return Created(
+                HttpContext.Request.Path.ToUriComponent(),
+                new { id = city.Id.ToString("N") });
         }
 
         [HttpPut("{id:guid}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult UpdateCity(string id, CityDTO cityDTO)
+        public IActionResult UpdateCity(string id, UpdateCityModel cityModel)
         {
             var guidId = Guid.Parse(id);
-
-            if (guidId != cityDTO.Id)
-            {
-                return BadRequest();
-            }
-
             var existingCity = _unit.Cities.GetById(guidId);
 
             if (existingCity == default)
@@ -125,7 +118,7 @@ namespace Journey.Presentation.Controllers
                 return NotFound();
             }
 
-            _mapper.Map(cityDTO, existingCity);
+            _mapper.Map(cityModel, existingCity);
 
             try
             {
