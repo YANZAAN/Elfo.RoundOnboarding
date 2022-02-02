@@ -13,10 +13,15 @@ namespace Journey.Persistence
         public DbSet<PlaceOfInterest> InterestingPlaces { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder) {
-            builder.Entity<City>()
-                .HasMany(c => c.IntrestingPlaces)
-                .WithOne(c => c.CityOwner)
-                .HasForeignKey(p => p.CityOwnerId);
+            builder.Entity<PlaceOfInterest>().ToTable("Place");
+
+            builder.Entity<City>(cityBuilder =>
+            {
+                cityBuilder.ToTable("City");
+                cityBuilder.HasMany(c => c.IntrestingPlaces)
+                    .WithOne(c => c.CityOwner)
+                    .HasForeignKey(p => p.CityOwnerId);
+            });
         }
     }
 }
